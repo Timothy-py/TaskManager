@@ -5,7 +5,7 @@ class TaskRepository():
     def get_task(id:str):
         return tasks_collection.find_one({"_id": ObjectId(id)})
     
-    def get_tasks():
+    def get_all_tasks():
         return tasks_collection.find()
     
     def create_task(task:dict):
