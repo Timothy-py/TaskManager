@@ -1,17 +1,32 @@
+import json
 from fastapi import HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from repositories.tasks import TaskRepository
-from schemas.tasks import TaskCreate, TaskUpdate
+from schemas.tasks import TaskCreate
+from config.redis import redis_cache
+from serializers.task import task_serializer
 
 
 class TaskService():
     # GET A TASK DETAILS
     def get_task(id: str):
+        # Check if the task is in cache
+        cache = redis_cache.get(f"task_{id}")
+        if cache is not None:
+            return json.loads(cache)
+
+        # Get the task from DB
         task = TaskRepository.get_task(id)
 
         if task is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")
+
+        # Serialize the task
+        data = task_serializer(task)
+
+        # Add the task to cache
+        redis_cache.set(f"task_{id}", json.dumps(data), 60)
 
         return task
 
@@ -55,6 +70,12 @@ class TaskService():
         # Get the updated task from MongoDB
         updated_task = TaskRepository.get_task(id)
 
+        # Serialize the task
+        data = task_serializer(updated_task)
+
+        # Add the task to cache
+        redis_cache.set(f"task_{id}", json.dumps(data), 60)
+
         # Return the updated task as a response
         return updated_task
 
@@ -69,5 +90,8 @@ class TaskService():
                 status_code=404,
                 detail=f"Task with ID {id} not found"
             )
+
+        # Delete the task from cache
+        redis_cache.delete(f"task_{id}")
 
         return True

@@ -11,6 +11,7 @@ class Settings(BaseSettings):
 
 settings = Settings()
 
+# Cache settings to improve performance
 @lru_cache
 def get_settings():
     return settings
