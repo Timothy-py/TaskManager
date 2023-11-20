@@ -11,7 +11,7 @@ class TaskRepository():
     def create_task(task:dict):
         return tasks_collection.insert_one(task)
 
-    def update_task(id:str, task:dict):
+    def update_task(id:str, task:any):
         return tasks_collection.update_one({"_id": ObjectId(id)}, {"$set": task})
 
     def delete_task(id:str):
