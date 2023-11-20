@@ -57,3 +57,17 @@ class TaskService():
 
         # Return the updated task as a response
         return updated_task
+
+    # DELETE TASK ITEM
+    def delete_task(id: str):
+        # Delete the task from MongoDB
+        result = TaskRepository.delete_task(id)
+
+        # Check if the task was deleted successfully
+        if result.deleted_count == 0:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Task with ID {id} not found"
+            )
+
+        return True
