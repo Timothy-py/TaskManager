@@ -13,7 +13,15 @@ class TaskService():
         # Check if the task is in cache
         cache = redis_cache.get(f"task_{id}")
         if cache is not None:
-            return json.loads(cache)
+            load = json.loads(cache)
+            data = {
+                "_id": id,
+                "title": load["title"],
+                "description": load["description"],
+                "due_date": load["due_date"],
+                "status": load["status"],
+            }
+            return data
 
         # Get the task from DB
         task = TaskRepository.get_task(id)
