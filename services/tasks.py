@@ -1,6 +1,7 @@
 import json
 from fastapi import HTTPException, status
 from fastapi.encoders import jsonable_encoder
+from fastapi_events.dispatcher import dispatch
 from repositories.tasks import TaskRepository
 from schemas.tasks import TaskCreate
 from config.redis import redis_cache
@@ -74,6 +75,9 @@ class TaskService():
                 status_code=404,
                 detail=f"Task with ID {id} not found"
             )
+
+        # Emit the task update event
+        dispatch(event_name="task-update", payload={"task_id": id, **update_data})
 
         # Get the updated task from MongoDB
         updated_task = TaskRepository.get_task(id)

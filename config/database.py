@@ -8,6 +8,7 @@ client = MongoClient(env_vars.DB_URI, server_api=ServerApi('1'))
 mongo_client = client.TaskManager
 
 tasks_collection = mongo_client["tasks"]
+notifications_collection = mongo_client["notifications"]
 
 # Send a ping to confirm a successful connection
 try:
