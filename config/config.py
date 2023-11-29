@@ -5,6 +5,8 @@ class Settings(BaseSettings):
     DB_URI: str
     REDIS_HOST: str
     REDIS_PORT: int
+    BOOTSTRAP_SERVERS: str
+    KAFKA_TOPIC: str
 
     model_config = SettingsConfigDict(env_file=".env")
 

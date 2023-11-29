@@ -12,7 +12,7 @@ class NotificationService():
         notification = NotificationRepository.create_notification(notification_dict)
 
         # Get the inserted notification from DB
-        result = NotificationRepository.get_notification(notification.inserted_id)
+        # result = NotificationRepository.get_notification(notification.inserted_id)
 
         print("Notification created successfully")
-        return result
+        return

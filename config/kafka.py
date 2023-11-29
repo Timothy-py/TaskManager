@@ -1,6 +1,11 @@
 import asyncio
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 import json
+from workers.task_worker import create_notification
+from config.config import env_vars
+
+BOOTSTRAP_SERVERS = env_vars.BOOTSTRAP_SERVERS
+KAFKA_TOPIC = env_vars.KAFKA_TOPIC
 
 
 class KafkaManager:
@@ -9,15 +14,13 @@ class KafkaManager:
         self.kafka_producer = AIOKafkaProducer(
             loop=self.loop, bootstrap_servers=kafka_instance)
         self.kafka_consumer = AIOKafkaConsumer(
-            "task-manager", loop=self.loop, bootstrap_servers=kafka_instance)
+            KAFKA_TOPIC, loop=self.loop, bootstrap_servers=kafka_instance)
 
     async def consume(self):
         await self.kafka_consumer.start()
         try:
             async for msg in self.kafka_consumer:
-                print(f"Kafka consumer message - {msg}")
-                # print("Consumed". msg.topic, msg.partition,
-                #         msg.offset, msg.key, msg.value, msg.timestamp)
+                create_notification(json.loads(msg.value))
         finally:
             await self.kafka_consumer.stop()
 
@@ -30,5 +33,5 @@ class KafkaManager:
         await self.kafka_consumer.stop()
 
 
-KAFKA_INSTANCE = "localhost:9092"
+KAFKA_INSTANCE = BOOTSTRAP_SERVERS
 kafka_manager = KafkaManager(KAFKA_INSTANCE)

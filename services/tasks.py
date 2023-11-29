@@ -77,7 +77,8 @@ class TaskService():
             )
 
         # Emit the task update event
-        dispatch(event_name="task-update", payload={"task_id": id, **update_data})
+        dispatch(event_name="task-update",
+                 payload={"task_id": id, **update_data})
 
         # Get the updated task from MongoDB
         updated_task = TaskRepository.get_task(id)
