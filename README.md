@@ -7,6 +7,7 @@ A simple task manager implementation that can be used to manage tasks.
 ## APPS
 
 ### Task Resources
+### Notification Resources
 
 ## APIs
 
@@ -22,6 +23,7 @@ A simple task manager implementation that can be used to manage tasks.
 - Backend Framework -> FastAPI
 - Database -> Mongodb
 - Cache - > Redis
+- Message Broker -> Apache Kafka
 
 ## Setup & Installation
 - Clone the project
